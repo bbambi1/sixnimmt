@@ -41,13 +41,6 @@ protected:
     int playerId;
     int numPlayers;
 
-    std::mt19937 rng;
-
-    int choseRandowRowToTake(const GameState& state) {
-        std::uniform_int_distribution<int> dist(0, 3);
-        return dist(rng);
-    }
-
     int choseLowestPenaltyRowToTake(const GameState& state) {
         int bestRow = 0;
         int minPenalty = calculateRowPenalty(state.rows[0]);
