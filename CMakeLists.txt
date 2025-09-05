@@ -22,6 +22,9 @@ include_directories(include)
 set(GAME_SOURCES
     src/game.cpp
     src/random_agent.cpp
+    src/lowest_card_first_agent.cpp
+    src/highest_card_first_agent.cpp
+    src/bulls_heads_first_agent.cpp
 )
 
 # Create the main executable

@@ -1,5 +1,8 @@
 #include "game.h"
 #include "random_agent.cpp"
+#include "lowest_card_first_agent.cpp"
+#include "highest_card_first_agent.cpp"
+#include "bulls_heads_first_agent.cpp"
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -49,10 +52,22 @@ public:
                     // For now, let's create new instances
                     if (players[i]->getName() == "RandomAgent") {
                         gamePlayers.push_back(std::make_unique<RandomAgent>());
+                    } else if (players[i]->getName() == "LowestCardFirstAgent") {
+                        gamePlayers.push_back(std::make_unique<LowestCardFirstAgent>());
+                    } else if (players[i]->getName() == "HighestCardFirstAgent") {
+                        gamePlayers.push_back(std::make_unique<HighestCardFirstAgent>());
+                    } else if (players[i]->getName() == "BullsHeadsFirstAgent") {
+                        gamePlayers.push_back(std::make_unique<BullsHeadsFirstAgent>());
                     }
 
                     if (players[j]->getName() == "RandomAgent") {
                         gamePlayers.push_back(std::make_unique<RandomAgent>());
+                    } else if (players[j]->getName() == "LowestCardFirstAgent") {
+                        gamePlayers.push_back(std::make_unique<LowestCardFirstAgent>());
+                    } else if (players[j]->getName() == "HighestCardFirstAgent") {
+                        gamePlayers.push_back(std::make_unique<HighestCardFirstAgent>());
+                    } else if (players[j]->getName() == "BullsHeadsFirstAgent") {
+                        gamePlayers.push_back(std::make_unique<BullsHeadsFirstAgent>());
                     }
 
                     // Initialize players (hands will be set by game)
@@ -162,6 +177,9 @@ int main() {
 
     // Add players
     contest.addPlayer(std::make_unique<RandomAgent>());
+    contest.addPlayer(std::make_unique<LowestCardFirstAgent>());
+    contest.addPlayer(std::make_unique<HighestCardFirstAgent>());
+    contest.addPlayer(std::make_unique<BullsHeadsFirstAgent>());
 
     std::cout << "\"6 nimmt!\" Contest Framework" << std::endl;
     std::cout << "1. Single game" << std::endl;

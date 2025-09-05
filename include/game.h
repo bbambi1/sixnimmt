@@ -41,6 +41,107 @@ protected:
     int playerId;
     int numPlayers;
 
+    std::mt19937 rng;
+
+    int choseRandowRowToTake(const GameState& state) {
+        std::uniform_int_distribution<int> dist(0, 3);
+        return dist(rng);
+    }
+
+    int choseLowestPenaltyRowToTake(const GameState& state) {
+        int bestRow = 0;
+        int minPenalty = calculateRowPenalty(state.rows[0]);
+
+        for (int i = 1; i < 4; ++i) {
+            int penalty = calculateRowPenalty(state.rows[i]);
+            if (penalty < minPenalty) {
+                minPenalty = penalty;
+                bestRow = i;
+            }
+        }
+
+        return bestRow;
+    }
+
+    int choseHighestPenaltyRowToTake(const GameState& state) {
+        int bestRow = 0;
+        int maxPenalty = calculateRowPenalty(state.rows[0]);
+
+        for (int i = 1; i < 4; ++i) {
+            int penalty = calculateRowPenalty(state.rows[i]);
+            if (penalty > maxPenalty) {
+                maxPenalty = penalty;
+                bestRow = i;
+            }
+        }
+
+        return bestRow;
+    }
+
+    int choseLowestLastCardRowToTake(const GameState& state) {
+        int bestRow = 0;
+        int minLastCard = state.rows[0].back().number;
+
+        for (int i = 1; i < 4; ++i) {
+            if (!state.rows[i].empty() && state.rows[i].back().number < minLastCard) {
+                minLastCard = state.rows[i].back().number;
+                bestRow = i;
+            }
+        }
+
+        return bestRow;
+    }
+
+    int choseHighestLastCardRowToTake(const GameState& state) {
+        int bestRow = 0;
+        int maxLastCard = state.rows[0].back().number;
+        
+        for (int i = 1; i < 4; ++i) {
+            if (!state.rows[i].empty() && state.rows[i].back().number > maxLastCard) {
+                maxLastCard = state.rows[i].back().number;
+                bestRow = i;
+            }
+        }
+
+        return bestRow;
+    }
+
+    int choseFewestCardsRowToTake(const GameState& state) {
+        int bestRow = 0;
+        int minCards = state.rows[0].size();
+
+        for (int i = 1; i < 4; ++i) {
+            if (state.rows[i].size() < minCards) {
+                minCards = state.rows[i].size();
+                bestRow = i;
+            }
+        }
+
+        return bestRow;
+    }
+
+    int choseMostCardsRowToTake(const GameState& state) {
+        int bestRow = 0;
+        int maxCards = state.rows[0].size();
+
+        for (int i = 1; i < 4; ++i) {
+            if (state.rows[i].size() > maxCards) {
+                maxCards = state.rows[i].size();
+                bestRow = i;
+            }
+        }
+
+        return bestRow;
+    }
+
+    int calculateRowPenalty(const std::vector<Card>& row) {
+        int penalty = 0;
+        for (const Card& card : row) {
+            penalty += card.bullHeads;
+        }
+        return penalty;
+    }
+
 public:
     virtual ~Player() = default;
 
@@ -55,15 +156,7 @@ public:
     // Return the index (0-3) of the row to take
     // Default implementation chooses the row with highest last card
     virtual int chooseRowToTake(const GameState& state) {
-        int bestRow = 0;
-        int maxLastCard = 0;
-        for (int i = 0; i < 4; ++i) {
-            if (!state.rows[i].empty() && state.rows[i].back().number > maxLastCard) {
-                maxLastCard = state.rows[i].back().number;
-                bestRow = i;
-            }
-        }
-        return bestRow;
+        return choseLowestPenaltyRowToTake(state);
     }
 
     virtual std::string getName() const = 0;
